@@ -20,6 +20,7 @@
     <string name="prefs__media__emoji_preferred_hair_style">Preferred emoji hair style</string>
 
     <!-- Emoji strings -->
+    <string name="emoji__category__recently_used" comment="Emoji category name">Recently used</string>
     <string name="emoji__category__smileys_emotion" comment="Emoji category name">Smileys &amp; Emotions</string>
     <string name="emoji__category__people_body" comment="Emoji category name">People &amp; Body</string>
     <string name="emoji__category__animals_nature" comment="Emoji category name">Animals &amp; Nature</string>

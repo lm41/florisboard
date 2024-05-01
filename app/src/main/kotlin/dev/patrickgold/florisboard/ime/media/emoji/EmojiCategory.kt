@@ -16,6 +16,7 @@
 
 package dev.patrickgold.florisboard.ime.media.emoji
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEmotions
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -30,17 +31,17 @@ import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.patrickgold.florisboard.R
 
-enum class EmojiCategory(val id: String) {
-    RECENTLY_USED("recently_used"),
-    SMILEYS_EMOTION("smileys_emotion"),
-    PEOPLE_BODY("people_body"),
-    ANIMALS_NATURE("animals_nature"),
-    FOOD_DRINK("food_drink"),
-    TRAVEL_PLACES("travel_places"),
-    ACTIVITIES("activities"),
-    OBJECTS("objects"),
-    SYMBOLS("symbols"),
-    FLAGS("flags");
+enum class EmojiCategory(val id: String, @StringRes val stringRes: Int) {
+    RECENTLY_USED("recently_used", R.string.emoji__category__recently_used),
+    SMILEYS_EMOTION("smileys_emotion", R.string.emoji__category__smileys_emotion),
+    PEOPLE_BODY("people_body", R.string.emoji__category__people_body),
+    ANIMALS_NATURE("animals_nature", R.string.emoji__category__animals_nature),
+    FOOD_DRINK("food_drink", R.string.emoji__category__food_drink),
+    TRAVEL_PLACES("travel_places", R.string.emoji__category__travel_places),
+    ACTIVITIES("activities", R.string.emoji__category__activities),
+    OBJECTS("objects", R.string.emoji__category__objects),
+    SYMBOLS("symbols", R.string.emoji__category__symbols),
+    FLAGS("flags", R.string.emoji__category__flags);
 
     fun icon(): ImageVector {
         return when (this) {

@@ -36,6 +36,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -164,13 +167,14 @@ fun EmojiPaletteView(
     val contentColor = emojiKeyStyle.foreground.solidColor(context, default = FlorisImeTheme.fallbackContentColor())
 
     Column(modifier = modifier) {
-        EmojiCategoriesTabRow(
+        //TODO: Add new TabRow
+        /*EmojiCategoriesTabRow(
             activeCategory = activeCategory,
             onCategoryChange = { category ->
                 scope.launch { lazyListState.scrollToItem(0) }
                 activeCategory = category
             },
-        )
+        )*/
 
         Box(
             modifier = Modifier
@@ -187,7 +191,7 @@ fun EmojiPaletteView(
             } else {
                 emojiMappings[activeCategory]!!
             }
-            if (activeCategory == EmojiCategory.RECENTLY_USED && deviceLocked) {
+            /*if (activeCategory == EmojiCategory.RECENTLY_USED && deviceLocked) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -216,7 +220,7 @@ fun EmojiPaletteView(
                     )
                 }
             }
-            else key(emojiMapping) {
+            else*/ key(emojiMapping) {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     LazyVerticalGrid(
                         modifier = Modifier
@@ -225,41 +229,53 @@ fun EmojiPaletteView(
                         columns = GridCells.Adaptive(minSize = EmojiBaseWidth),
                         state = lazyListState,
                     ) {
-                        items(emojiMapping) { emojiSet ->
-                            EmojiKey(
-                                emojiSet = emojiSet,
-                                emojiCompatInstance = emojiCompatInstance,
-                                preferredSkinTone = preferredSkinTone,
-                                contentColor = contentColor,
-                                fontSize = emojiKeyFontSize,
-                                fontSizeMultiplier = fontSizeMultiplier,
-                                onEmojiInput = { emoji ->
-                                    keyboardManager.inputEventDispatcher.sendDownUp(emoji)
-                                    scope.launch {
-                                        EmojiRecentlyUsedHelper.addEmoji(prefs, emoji)
-                                    }
-                                },
-                                onLongPress = { emoji ->
-                                    if (activeCategory == EmojiCategory.RECENTLY_USED) {
+                        for (items in emojiMappings) {
+                            header {
+                                Text(text = stringRes(id = items.key.stringRes))
+                            }
+                            items(items.value) { emojiSet ->
+                                EmojiKey(
+                                    emojiSet = emojiSet,
+                                    emojiCompatInstance = emojiCompatInstance,
+                                    preferredSkinTone = preferredSkinTone,
+                                    contentColor = contentColor,
+                                    fontSize = emojiKeyFontSize,
+                                    fontSizeMultiplier = fontSizeMultiplier,
+                                    onEmojiInput = { emoji ->
+                                        keyboardManager.inputEventDispatcher.sendDownUp(emoji)
                                         scope.launch {
-                                            EmojiRecentlyUsedHelper.removeEmoji(prefs, emoji)
-                                            recentlyUsedVersion++
-                                            withContext(Dispatchers.Main) {
-                                                context.showShortToast(
-                                                    R.string.emoji__recently_used__removal_success_message,
-                                                    "emoji" to emoji.value,
-                                                )
+                                            EmojiRecentlyUsedHelper.addEmoji(prefs, emoji)
+                                        }
+                                    },
+                                    onLongPress = {}
+                                    /*onLongPress = { emoji ->
+                                        if (activeCategory == EmojiCategory.RECENTLY_USED) {
+                                            scope.launch {
+                                                EmojiRecentlyUsedHelper.removeEmoji(prefs, emoji)
+                                                recentlyUsedVersion++
+                                                withContext(Dispatchers.Main) {
+                                                    context.showShortToast(
+                                                        R.string.emoji__recently_used__removal_success_message,
+                                                        "emoji" to emoji.value,
+                                                    )
+                                                }
                                             }
                                         }
-                                    }
-                                },
-                            )
+                                    },*/
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+internal fun LazyGridScope.header(
+    content: @Composable LazyGridItemScope.() -> Unit
+) {
+    item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
 }
 
 @Composable
